@@ -1,0 +1,116 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Metadata": {
+        "AWS::CloudFormation::Designer": {
+            "fbf7d7d5-f836-479c-a5f8-575e20bad9b6": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": -1670,
+                    "y": -610
+                },
+                "z": 1,
+                "embeds": [],
+                "isassociatedwith": [
+                    "8d48eab7-bbaa-4a60-8d12-0725c1e20e46"
+                ]
+            },
+            "8d48eab7-bbaa-4a60-8d12-0725c1e20e46": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": -1670,
+                    "y": -470
+                },
+                "z": 1,
+                "embeds": []
+            }
+        }
+    },
+    "Resources": {
+        "EC2StartStop": {
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "Ec2StartStop",
+                "Roles": [
+                    "rolEC2StartStop"
+                ],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Resource": "arn:aws:logs:*:*:*"
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "ec2:Stop*",
+                                "ec2:Get*",
+                                "ec2:Describe*"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "fbf7d7d5-f836-479c-a5f8-575e20bad9b6"
+                }
+            }
+        },
+        "rolEC2StartStop": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "8d48eab7-bbaa-4a60-8d12-0725c1e20e46"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "RoleId": {
+            "Description": "Name of Created IAM Role",
+            "Value": {
+                "Ref": "rolEC2StartStop"
+            }
+        },
+        "RoleArn": {
+            "Description": "Arn of Created Role",
+            "Value": {
+                "Fn::GetAtt": [
+                    "rolEC2StartStop",
+                    "Arn"
+                ]
+            }
+        }
+    }
+}
